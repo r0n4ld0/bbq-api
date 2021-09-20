@@ -1,0 +1,375 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "BBQ Planning API",
+    "contact": {
+      "email": "ronaldo_Scheffer@hotmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "User"
+    },
+    {
+      "name": "Barbecue",
+      "description": "Barbecue plan"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create a user",
+        "description": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe@teste.com",
+                "password": "123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "User already exists!"
+          }
+        }
+      },
+      "get": {
+        "tags": ["User"],
+        "summary": "List all users",
+        "description": "List of users",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "name": { "type": "string" }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "ae156bde-a428-4b7e-ba82-459e863c1167",
+                  "description": "John Doe"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token missing!"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Login",
+        "description": "Create a new session  ",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              },
+              "example": {
+                "email": "johndoe@teste.com",
+                "password": "123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Email or password incorrect"
+          }
+        }
+      }
+    },
+    "/barbecues": {
+      "post": {
+        "tags": ["Barbecue"],
+        "summary": "Create a barbecue",
+        "description": "Create a new barbecue",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": { "type": "string" },
+                  "description": { "type": "string" },
+                  "observation": { "type": "string", "required": false },
+                  "value_with_drinks": { "type": "number" },
+                  "value_without_drinks": { "type": "number" }
+                }
+              },
+              "example": {
+                "date": "2021-12-24",
+                "description": "Churras de Natal",
+                "observation": "Comemoração de natal",
+                "value_with_drinks": 50,
+                "value_without_drinks": 30
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Date cannot be past."
+          }
+        }
+      },
+      "get": {
+        "tags": ["Barbecue"],
+        "summary": "List barbecues available",
+        "description": "List all barbecue available",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "date": { "type": "string" },
+                      "description": { "type": "string" },
+                      "total_participants": { "type": "string" },
+                      "amount": { "type": "string" }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "ae156bde-a428-4b7e-ba82-459e863c1167",
+                  "date": "2021-12-24T03:00:00.000Z",
+                  "description": "Churras de Natal",
+                  "total_participants": "1",
+                  "amount": "20"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token missing!"
+          }
+        }
+      }
+    },
+    "/barbecues/participants": {
+      "post": {
+        "tags": ["Barbecue"],
+        "summary": "Add participant to barbecue",
+        "description": "Add a new participant to barbecue",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": { "type": "string" },
+                  "barbecue_id": { "type": "string" },
+                  "value": { "type": "number" },
+                  "is_paid": { "type": "boolean" }
+                }
+              },
+              "example": {
+                "user_id": "fed784d3-8780-4638-84b3-15cd91349803",
+                "barbecue_id": "32d52940-fbc7-49d6-bb08-5c07d4211c4e",
+                "value": 20,
+                "is_paid": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "User is already participating in the barbecue."
+          }
+        }
+      }
+    },
+    "/barbecues/participants/{barbecue_id}": {
+      "get": {
+        "tags": ["Barbecue"],
+        "summary": "List participants of barbecue",
+        "description": "List participants of barbecue",
+        "parameters": [
+          {
+            "name": "barbecue_id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "value_paid": { "type": "string" },
+                      "is_paid": { "type": "boolean" },
+                      "name_user": { "type": "string" }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "fc767f28-6924-427d-9abc-cdb9689aac56",
+                  "value_paid": "20",
+                  "is_paid": true,
+                  "name_user": "Ronaldo Scheffer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Token missing!"
+          }
+        }
+      }
+    },
+    "/barbecues/participants/{id}": {
+      "delete": {
+        "tags": ["Barbecue"],
+        "summary": "Remove participant of barbecue",
+        "description": "Remove participant of barbecue",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Token missing!"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Barbecue"],
+        "summary": "Update payment of participant",
+        "description": "Update payment of participant",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Token missing!"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
