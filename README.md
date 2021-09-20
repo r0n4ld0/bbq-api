@@ -14,7 +14,7 @@
 
 ### 1. Clone repository
 ```
-git clone git remote add origin git@github.com:r0n4ld0/bbq-api.git
+git clone https://github.com/r0n4ld0/bbq-api
 ```
 ### 2. Build docker image
 ```
